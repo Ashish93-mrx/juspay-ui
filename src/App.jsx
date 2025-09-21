@@ -1,4 +1,3 @@
-import React from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Sidebar from "./components/Sidebar";
@@ -29,7 +28,7 @@ export default function App() {
                 <Route path="/orders" element={<OrderList />} />
               </Routes>
             </Box>
-            {location.pathname === "/dashboard" && <RightSidebar />}
+            {<RightSidebar />}
           </Box>
         </Box>
       </BrowserRouter>

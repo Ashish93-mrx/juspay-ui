@@ -2,7 +2,6 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Paper from "@mui/material/Paper";
 import StatCard from "../components/StatCard";
-import MiniChart from "../components/MiniChart";
 import TransactionsTable from "../components/TransactionsTable";
 import { useTheme } from "@mui/material/styles";
 import {
@@ -17,6 +16,20 @@ import {
   CartesianGrid,
 } from "recharts";
 import { Typography } from "@mui/material";
+import {
+  ComposableMap,
+  Geographies,
+  Geography,
+  Marker,
+} from "react-simple-maps";
+import { LinearProgress } from "@mui/material";
+
+const locations = [
+  { city: "New York", value: 72 },
+  { city: "San Francisco", value: 39 },
+  { city: "Sydney", value: 25 },
+  { city: "Singapore", value: 61 },
+];
 
 const data = [
   { name: "Jan", actual: 18, projection: 22 },
@@ -28,10 +41,36 @@ const data = [
 ];
 
 const statData = [
-  { title: "Customers", value: "3,781", delta: 11.01, bgLight: "#E3F5FF", bgDark: "#E3F5FF", textDarkMode: "#0F1724" },
-  { title: "Orders", value: "1,219", delta: -0.03, bgLight: "#F7F9FB", bgDark: "#FFFFFF0D" },
-  { title: "Revenue", value: "$695", delta: 15.03, bgLight: "#F7F9FB", bgDark: "#FFFFFF0D" },
-  { title: "Growth", value: "30.1%", delta: 6.08, bgLight: "#E5ECF6", bgDark: "#E5ECF6", textDarkMode: "#0F1724" },
+  {
+    title: "Customers",
+    value: "3,781",
+    delta: 11.01,
+    bgLight: "#E3F5FF",
+    bgDark: "#E3F5FF",
+    textDarkMode: "#0F1724",
+  },
+  {
+    title: "Orders",
+    value: "1,219",
+    delta: -0.03,
+    bgLight: "#F7F9FB",
+    bgDark: "#FFFFFF0D",
+  },
+  {
+    title: "Revenue",
+    value: "$695",
+    delta: 15.03,
+    bgLight: "#F7F9FB",
+    bgDark: "#FFFFFF0D",
+  },
+  {
+    title: "Growth",
+    value: "30.1%",
+    delta: 6.08,
+    bgLight: "#E5ECF6",
+    bgDark: "#E5ECF6",
+    textDarkMode: "#0F1724",
+  },
 ];
 
 const chartData = Array.from({ length: 12 }).map((_, i) => ({
@@ -40,14 +79,38 @@ const chartData = Array.from({ length: 12 }).map((_, i) => ({
 }));
 
 const transactions = [
-  { id: "TX001", customer: "Rahul K", amount: 2599, status: "Success", date: "2025-09-16" },
-  { id: "TX002", customer: "Anjali P", amount: 499, status: "Success", date: "2025-09-16" },
-  { id: "TX003", customer: "Rohit S", amount: 199, status: "Failed", date: "2025-09-15" },
+  {
+    id: "TX001",
+    customer: "Rahul K",
+    amount: 2599,
+    status: "Success",
+    date: "2025-09-16",
+  },
+  {
+    id: "TX002",
+    customer: "Anjali P",
+    amount: 499,
+    status: "Success",
+    date: "2025-09-16",
+  },
+  {
+    id: "TX003",
+    customer: "Rohit S",
+    amount: 199,
+    status: "Failed",
+    date: "2025-09-15",
+  },
 ];
 
 export default function Dashboard() {
   const theme = useTheme();
 
+  const markers = [
+    { name: "New York", coordinates: [-74.0059, 40.7128] },
+    { name: "San Francisco", coordinates: [-122.4194, 37.7749] },
+    { name: "Sydney", coordinates: [151.2093, -33.8688] },
+    { name: "Singapore", coordinates: [103.8198, 1.3521] },
+  ];
   return (
     <Box sx={{ p: { xs: 2, sm: 3 } }}>
       {/* Title */}
@@ -65,29 +128,29 @@ export default function Dashboard() {
       </Box>
 
       <Grid container spacing={3}>
-                  <Grid container spacing={2} direction="column">
-            <Grid item>
-              <Grid container spacing={2}>
-                <Grid item xs={6}>
-                  <StatCard {...statData[0]} />
-                </Grid>
-                <Grid item xs={6}>
-                  <StatCard {...statData[1]} />
-                </Grid>
+        <Grid container spacing={2} direction="column" sx={{ width: 432 }}>
+          <Grid item>
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <StatCard {...statData[0]} />
               </Grid>
-            </Grid>
-
-            <Grid item>
-              <Grid container spacing={2}>
-                <Grid item xs={6}>
-                  <StatCard {...statData[2]} />
-                </Grid>
-                <Grid item xs={6}>
-                  <StatCard {...statData[3]} />
-                </Grid>
+              <Grid item xs={6}>
+                <StatCard {...statData[1]} />
               </Grid>
             </Grid>
           </Grid>
+
+          <Grid item>
+            <Grid container spacing={2}>
+              <Grid item xs={6}>
+                <StatCard {...statData[2]} />
+              </Grid>
+              <Grid item xs={6}>
+                <StatCard {...statData[3]} />
+              </Grid>
+            </Grid>
+          </Grid>
+        </Grid>
 
         <Grid item xs={12} md={6} lg={6}>
           <Box
@@ -97,7 +160,6 @@ export default function Dashboard() {
               minWidth: 400,
               borderRadius: 2, // 16px
               p: 3, // 24px
-              //   bgcolor: "#F7F9FB", / background
               bgcolor: theme.palette.mode === "light" ? "#F7F9FB" : "#FFFFFF0D",
               display: "flex",
               flexDirection: "column",
@@ -133,28 +195,35 @@ export default function Dashboard() {
                   dataKey="projection"
                   fill="#A8C5DA"
                   barSize={20}
-                    stackId="a"
-                  radius={[0, 0, 0, 0]} 
-
+                  stackId="a"
+                  radius={[0, 0, 0, 0]}
                 />
 
                 <Bar
                   dataKey="actual"
                   fill="#4C8BF5"
                   barSize={20}
-                    stackId="a"
-                  radius={[4, 4, 0, 0]} 
+                  stackId="a"
+                  radius={[4, 4, 0, 0]}
                 />
               </BarChart>
             </ResponsiveContainer>
           </Box>
         </Grid>
 
-        
-
         <Grid item xs={12} md={8}>
-          <Paper sx={{ p: 2, mb: 3 }}>
-            <Box sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}>
+          <Paper
+            sx={{
+              p: 2,
+              mb: 3,
+              height: 318,
+              width: 662,
+              bgcolor: theme.palette.mode === "light" ? "#F7F9FB" : "#FFFFFF0D",
+            }}
+          >
+            <Box
+              sx={{ display: "flex", justifyContent: "space-between", mb: 1 }}
+            >
               <Box>
                 <Typography variant="subtitle2" fontWeight={600}>
                   Revenue trend
@@ -164,12 +233,18 @@ export default function Dashboard() {
                 </Typography>
               </Box>
             </Box>
-            <ResponsiveContainer width="100%" height={260}>
+            <ResponsiveContainer width="100%" height={232}>
               <LineChart data={chartData}>
                 <XAxis dataKey="name" />
                 <YAxis />
                 <Tooltip />
-                <Line type="monotone" dataKey="value" stroke="#4C8BF5" strokeWidth={3} dot={false} />
+                <Line
+                  type="monotone"
+                  dataKey="value"
+                  stroke="#4C8BF5"
+                  strokeWidth={3}
+                  dot={false}
+                />
               </LineChart>
             </ResponsiveContainer>
           </Paper>
@@ -177,24 +252,114 @@ export default function Dashboard() {
           <TransactionsTable rows={transactions} />
         </Grid>
 
-        {/* Snapshot + Top Merchants */}
-        <Grid item xs={12} md={4}>
-          <Paper sx={{ p: 2, mb: 3 }}>
-            <Typography variant="subtitle2" fontWeight={600}>
-              Live snapshot
-            </Typography>
-            <MiniChart data={chartData.map((d) => ({ value: d.value }))} />
-          </Paper>
+        <Grid item xs={12} md={6} lg={6}>
+          <Paper
+            sx={{
+              height: 318,
+              minWidth: 202,
+              borderRadius: 2, // 16px
+              p: 3,
+              display: "flex",
+              flexDirection: "column",
+              gap: 0,
+              bgcolor: theme.palette.mode === "light" ? "#F7F9FB" : "#FFFFFF0D",
+            }}
+          >
 
-          <Paper sx={{ p: 2 }}>
-            <Typography variant="subtitle2" fontWeight={600}>
-              Top merchants
+            <Typography
+              sx={{
+                fontFamily: "Inter, sans-serif",
+                fontWeight: 600,
+                fontSize: "14px",
+                lineHeight: "20px",
+                mb: 1,
+                color: "text.primary",
+                height: 20,
+              }}
+            >
+              Revenue by Location
             </Typography>
-            <ul style={{ margin: 0, paddingLeft: 16 }}>
-              <li>Acme Payments — ₹1,20,000</li>
-              <li>FastMart — ₹82,700</li>
-              <li>ShopQuick — ₹78,200</li>
-            </ul>
+
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+              <ComposableMap projectionConfig={{ scale: 200 }}>
+                <Geographies geography="https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json">
+                  {({ geographies }) =>
+                    geographies.map((geo) => (
+                      <Geography
+                        key={geo.rsmKey}
+                        geography={geo}
+                        style={{
+                          default: { fill: "#E5ECF6", stroke: "#FFF" },
+                          hover: { fill: "#D6D6DA" },
+                          pressed: { fill: "#E42" },
+                        }}
+                      />
+                    ))
+                  }
+                </Geographies>
+
+                {markers.map(({ name, coordinates }) => (
+                  <Marker key={name} coordinates={coordinates}>
+                    <circle r={3} fill="#4C8BF5" />
+                  </Marker>
+                ))}
+              </ComposableMap>
+              {locations.map((loc, i) => (
+                <Box
+                  key={i}
+                  sx={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 0.5,
+                  }}
+                >
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    <Typography
+                      sx={{
+                        fontFamily: "Inter, sans-serif",
+                        fontWeight: 400,
+                        fontSize: "14px",
+                        lineHeight: "20px",
+                        color: "text.primary",
+                      }}
+                    >
+                      {loc.city}
+                    </Typography>
+                    <Typography
+                      sx={{
+                        fontFamily: "Inter, sans-serif",
+                        fontWeight: 600,
+                        fontSize: "14px",
+                        lineHeight: "20px",
+                        color: "text.primary",
+                      }}
+                    >
+                      {loc.value}K
+                    </Typography>
+                  </Box>
+
+                  <LinearProgress
+                    variant="determinate"
+                    value={loc.value}
+                    sx={{
+                      height: 2,
+                      borderRadius: 1,
+                      backgroundColor:
+                        theme.palette.mode === "light" ? "#E5ECF6" : "#333",
+                      "& .MuiLinearProgress-bar": {
+                        backgroundColor: "#4C8BF5",
+                      },
+                    }}
+                  />
+                </Box>
+              ))}
+            </Box>
           </Paper>
         </Grid>
       </Grid>

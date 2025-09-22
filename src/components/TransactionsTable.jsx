@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Table,
   TableBody,
@@ -10,12 +9,20 @@ import {
   Typography,
   Box,
 } from "@mui/material";
+import { useTheme } from "@mui/material/styles";
 
 export default function TransactionsTable({ rows = [] }) {
+  const theme = useTheme();
   return (
-    <TableContainer component={Paper} sx={{ mt: 2 }}>
+    <TableContainer
+      component={Paper}
+      sx={{
+        mt: 2,
+        bgcolor: theme.palette.mode === "light" ? "#F7F9FB" : "#FFFFFF0D",
+      }}
+    >
       <Box sx={{ p: 2 }}>
-        <Typography variant="subtitle1">Recent transactions</Typography>
+        <Typography variant="subtitle1">Top Selling Products</Typography>
       </Box>
       <Table>
         <TableHead>

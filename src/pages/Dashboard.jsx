@@ -196,7 +196,7 @@ export default function Dashboard() {
 
                 <Bar
                   dataKey="actual"
-                  fill="#4C8BF5"
+                  fill="#cfdeea"
                   barSize={20}
                   stackId="a"
                   radius={[4, 4, 0, 0]}

@@ -4,6 +4,7 @@ import Paper from "@mui/material/Paper";
 import StatCard from "../components/StatCard";
 import TransactionsTable from "../components/TransactionsTable";
 import { useTheme } from "@mui/material/styles";
+import mapImg from "../assets/dashboard/Map.jpg";
 import {
   ResponsiveContainer,
   LineChart,
@@ -16,12 +17,6 @@ import {
   CartesianGrid,
 } from "recharts";
 import { Typography } from "@mui/material";
-import {
-  ComposableMap,
-  Geographies,
-  Geography,
-  Marker,
-} from "react-simple-maps";
 import { LinearProgress } from "@mui/material";
 
 const locations = [
@@ -265,7 +260,6 @@ export default function Dashboard() {
               bgcolor: theme.palette.mode === "light" ? "#F7F9FB" : "#FFFFFF0D",
             }}
           >
-
             <Typography
               sx={{
                 fontFamily: "Inter, sans-serif",
@@ -281,29 +275,19 @@ export default function Dashboard() {
             </Typography>
 
             <Box sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-              <ComposableMap projectionConfig={{ scale: 200 }}>
-                <Geographies geography="https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json">
-                  {({ geographies }) =>
-                    geographies.map((geo) => (
-                      <Geography
-                        key={geo.rsmKey}
-                        geography={geo}
-                        style={{
-                          default: { fill: "#E5ECF6", stroke: "#FFF" },
-                          hover: { fill: "#D6D6DA" },
-                          pressed: { fill: "#E42" },
-                        }}
-                      />
-                    ))
-                  }
-                </Geographies>
+              <Box
+                component="img"
+                src={mapImg}
+                alt="World map"
+                sx={{
+                  width: "100%",
+                  height: "auto",
+                  maxHeight: 120,
+                  objectFit: "contain",
+                  mb: 1,
+                }}
+              />
 
-                {markers.map(({ name, coordinates }) => (
-                  <Marker key={name} coordinates={coordinates}>
-                    <circle r={3} fill="#4C8BF5" />
-                  </Marker>
-                ))}
-              </ComposableMap>
               {locations.map((loc, i) => (
                 <Box
                   key={i}

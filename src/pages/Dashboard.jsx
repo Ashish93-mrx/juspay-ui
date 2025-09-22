@@ -121,7 +121,7 @@ export default function Dashboard() {
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={data}>
                 <CartesianGrid
-                  strokeDasharray="3 3"
+                  strokeDasharray="1 1"
                   vertical={false}
                   stroke="#E0E0E0"
                 />
@@ -132,20 +132,25 @@ export default function Dashboard() {
                 <Bar
                   dataKey="projection"
                   fill="#A8C5DA"
-                  barSize={32}
-                  radius={[4, 4, 0, 0]} 
+                  barSize={20}
+                    stackId="a"
+                  radius={[0, 0, 0, 0]} 
+
                 />
 
                 <Bar
                   dataKey="actual"
                   fill="#4C8BF5"
-                  barSize={32}
+                  barSize={20}
+                    stackId="a"
                   radius={[4, 4, 0, 0]} 
                 />
               </BarChart>
             </ResponsiveContainer>
           </Box>
         </Grid>
+
+        
 
         <Grid item xs={12} md={8}>
           <Paper sx={{ p: 2, mb: 3 }}>

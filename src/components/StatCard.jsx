@@ -1,8 +1,7 @@
 import { Card, CardContent, Box, Typography } from "@mui/material";
-import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import { motion } from "framer-motion";
 import { useTheme } from "@mui/material/styles";
+import { TrendDown, TrendUp } from "phosphor-react";
 
 export default function StatCard({
   title,
@@ -55,7 +54,7 @@ export default function StatCard({
                 fontSize: "14px",
                 lineHeight: "20px",
                 letterSpacing: 0,
-                color: subTextColor,
+                color: textColor,
               }}
             >
               {title}
@@ -87,28 +86,23 @@ export default function StatCard({
             </Typography>
 
             <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
-              {positive ? (
-                <ArrowUpwardIcon
-                  fontSize="small"
-                  sx={{ color: "success.main" }}
-                />
-              ) : (
-                <ArrowDownwardIcon
-                  fontSize="small"
-                  sx={{ color: "error.main" }}
-                />
-              )}
-              <Typography
+            <Typography
                 sx={{
                   fontFamily: "Inter, sans-serif",
                   fontWeight: 600,
                   fontSize: "12px",
                   lineHeight: "20px",
-                  color: positive ? "success.main" : "error.main",
+                  color: textColor,
                 }}
               >
                 {positive ? `+${Math.abs(delta)}%` : `-${Math.abs(delta)}%`}
               </Typography>
+              {positive ? (
+                <TrendUp size={16} color={textColor} /> 
+              ) : (
+                <TrendDown size={16} color={textColor} />
+              )}
+              
             </Box>
           </Box>
         </CardContent>
